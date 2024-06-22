@@ -14,12 +14,11 @@ const port = 3001;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Create a MySQL connection
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root", // Replace with your MySQL username
-  password: "", // Replace with your MySQL password
-  database: "rating_app", // The database name
+  user: "root",
+  password: "",
+  database: "rating_app",
 });
 
 db.connect((err) => {
@@ -30,26 +29,22 @@ db.connect((err) => {
   console.log("Connected to MySQL");
 });
 
-// Initialize the Google Generative AI client
-const genAI = new GoogleGenerativeAI(process.env.API_KEY); // Use your API key stored in .env
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
-// Initialize Twilio client
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioClient = twilio(accountSid, authToken);
 const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 const recipientPhoneNumber = process.env.RECIPIENT_PHONE_NUMBER;
 
-// Endpoint to save the rating and return sentiment
 app.post("/api/ratings", async (req, res) => {
   const { name, description, rating } = req.body;
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" }); // Use the gemini-pro model for sentiment analysis
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const prompt = `Analyze the sentiment of the following text:\n\n${description}\nThe sentiment should be categorized as either positive, negative, or neutral.`;
     const result = await model.generateContent(prompt);
-    const sentiment = result.response.text().toLowerCase(); // Extract the sentiment from the result
-
+    const sentiment = result.response.text().toLowerCase();
     const query =
       "INSERT INTO ratings (name, description, rating) VALUES (?,?,?)";
     db.query(query, [name, description, rating], (err, result) => {

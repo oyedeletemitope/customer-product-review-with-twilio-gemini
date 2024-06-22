@@ -1,4 +1,3 @@
-// src/StarRating.js
 import React, { useState } from "react";
 import "./StarRating.css";
 
