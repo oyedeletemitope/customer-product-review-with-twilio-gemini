@@ -1,0 +1,23 @@
+/* src/StarRating.css */
+.star-rating {
+    display: flex;
+    direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.star {
+    cursor: pointer;
+    padding: 0;
+    font-size: 2rem;
+    color: #ccc;
+    /* Default color */
+}
+
+.star.on {
+    color: gold;
+}
+
+.star.off {
+    color: #ccc;
+}
